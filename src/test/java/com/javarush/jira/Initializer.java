@@ -1,3 +1,5 @@
+package com.javarush.jira;
+
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -5,13 +7,18 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public class Container implements ApplicationContextInitializer<ConfigurableApplicationContext>{
+public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext>{
     @org.testcontainers.junit.jupiter.Container
-    private final static PostgreSQLContainer<?> postgreSQLContainer=new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("jiraTest")
-            .withUsername("testName")
-            .withPassword("jiraRushTest")
-            .withInitScript("test.sql");
+    private final static PostgreSQLContainer<?> postgreSQLContainer;
+
+    static {
+        postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+                .withDatabaseName("jiraTest")
+                .withUsername("testName")
+                .withPassword("jiraRushTest")
+                .withInitScript("test.sql");
+    }
+
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         TestPropertyValues.of(
@@ -21,4 +28,4 @@ public class Container implements ApplicationContextInitializer<ConfigurableAppl
             ).applyTo(applicationContext.getEnvironment());
         }
     }
-}
+
